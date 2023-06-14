@@ -24,11 +24,13 @@ public class AuthenticationRepository {
     }
 
     public boolean validateEmail(String user,String password){
+
         String queryForEmailCheck = "SELECT COUNT(*) FROM UserDetails WHERE email=:user AND password=:password";
         Query jpaQueryForEmailCheck = entityManager.createQuery(queryForEmailCheck);
         jpaQueryForEmailCheck.setParameter("user", user);
         jpaQueryForEmailCheck.setParameter("password", password);
         int countForEmailCheck = ((Number) jpaQueryForEmailCheck.getSingleResult()).intValue();
+
         return countForEmailCheck > 0;
 
     }

@@ -10,14 +10,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-@Import(AuthenticationService.class)
 public class AuthenticationServiceTest {
 
     @Nested
@@ -44,6 +42,7 @@ public class AuthenticationServiceTest {
 
             verify(authenticationRepository).validateUserName(userName,password);
 
+
         }
 
         @Test
@@ -59,7 +58,7 @@ public class AuthenticationServiceTest {
 
             assertThat(validUser).isEqualTo(true);
 
-            verify(authenticationRepository).validateUserName(email,password);
+            verify(authenticationRepository).validateEmail(email,password);
 
         }
 
