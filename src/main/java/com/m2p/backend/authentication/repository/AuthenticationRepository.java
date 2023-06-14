@@ -11,7 +11,7 @@ public class AuthenticationRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public boolean validateUserName(String user, String password) {
+    public int validateUserName(String user, String password) {
 
         String queryForUserNameCheck = "SELECT COUNT(*) FROM UserDetails WHERE username=:user AND password=:password";
         Query jpaQueryForUserNameCheck = entityManager.createQuery(queryForUserNameCheck);
@@ -19,11 +19,11 @@ public class AuthenticationRepository {
         jpaQueryForUserNameCheck.setParameter("password", password);
         int countForUserNameCheck = ((Number) jpaQueryForUserNameCheck.getSingleResult()).intValue();
 
-        return countForUserNameCheck > 0;
+        return countForUserNameCheck;
 
     }
 
-    public boolean validateEmail(String user,String password){
+    public int validateEmail(String user,String password){
 
         String queryForEmailCheck = "SELECT COUNT(*) FROM UserDetails WHERE email=:user AND password=:password";
         Query jpaQueryForEmailCheck = entityManager.createQuery(queryForEmailCheck);
@@ -31,7 +31,7 @@ public class AuthenticationRepository {
         jpaQueryForEmailCheck.setParameter("password", password);
         int countForEmailCheck = ((Number) jpaQueryForEmailCheck.getSingleResult()).intValue();
 
-        return countForEmailCheck > 0;
+        return countForEmailCheck;
 
     }
 }

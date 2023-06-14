@@ -34,7 +34,7 @@ public class AuthenticationServiceTest {
 
             String password = "Naveen@01";
 
-            Mockito.when(authenticationRepository.validateUserName(userName,password)).thenReturn(true);
+            Mockito.when(authenticationRepository.validateUserName(userName,password)).thenReturn(1);
 
             Boolean validUser = authenticationService.userIsValid(userName,password);
 
@@ -52,7 +52,7 @@ public class AuthenticationServiceTest {
 
             String password = "Naveen@01";
 
-            Mockito.when(authenticationRepository.validateEmail(email,password)).thenReturn(true);
+            Mockito.when(authenticationRepository.validateEmail(email,password)).thenReturn(1);
 
             Boolean validUser = authenticationService.userIsValid(email,password);
 

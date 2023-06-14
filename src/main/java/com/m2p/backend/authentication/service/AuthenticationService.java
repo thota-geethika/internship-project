@@ -11,6 +11,6 @@ public class AuthenticationService {
     private AuthenticationRepository authenticationRepository;
 
     public Boolean userIsValid(String user,String password) {
-        return authenticationRepository.validateUserName(user,password) || authenticationRepository.validateEmail(user,password);
+        return authenticationRepository.validateUserName(user,password) > 0|| authenticationRepository.validateEmail(user,password) > 0;
     }
 }
