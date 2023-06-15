@@ -13,6 +13,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @CrossOrigin("http://localhost:3000")
     @GetMapping("/authenticate")
     @ResponseBody
     public ResponseEntity<Boolean> userIsValid(@RequestParam(name="user") String user, @RequestParam(name="password")  String password){
