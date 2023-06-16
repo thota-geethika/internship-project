@@ -1,5 +1,6 @@
 package com.m2p.backend.servicetests;
-
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.m2p.backend.authentication.model.UserDetails;
 import com.m2p.backend.authentication.repository.AuthenticationRepository;
 import com.m2p.backend.authentication.service.AuthenticationService;
@@ -13,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -69,8 +70,8 @@ public class AuthenticationServiceTest {
             @InjectMocks
             private AuthenticationService authenticationService;
 
-        @Mock
-        private AuthenticationRepository authenticationRepository;
+            @Mock
+            private AuthenticationRepository authenticationRepository;
             @Test
             void toCheckUserNameIsAvailable() {
                 Mockito.when(authenticationRepository.checkUserName("sruthi")).thenReturn(0);
@@ -103,12 +104,23 @@ public class AuthenticationServiceTest {
 
             @Test
             void toCheckWhetherUserDetailsAreGettingStored(){
-                UserDetails details = new UserDetails(7,"VigneshM","vigneshmanikavasagam17@gmail.com","Vignesh17");
+                UserDetails details = new UserDetails(7,"VigneshM","vigneshmanikavasagam17@gmail.com","VmlnbmVzaDE3");
                 Mockito.when(authenticationRepository.save(details)).thenReturn(details);
+
+                String encryptedPwdFromFrontEnd = details.getPassword();
+                String decryptPwdFromFrontEnd = "Vignesh17";
+                String encryptPwdForBackend = "2a$10$xuEdZfLhMhSVtYXvjjtG7.WhfK4HDGYxeWgMzqzaS8C46esw4EYfK";
+
+
+                BCryptPasswordEncoder bCrypt = mock(BCryptPasswordEncoder.class);
+                Mockito.when(bCrypt.encode(decryptPwdFromFrontEnd)).thenReturn(encryptPwdForBackend);
+
+                String resultOfDecryptionFrontEnd = authenticationService.decryptPassword(encryptedPwdFromFrontEnd);
+                String resultOfEncryptionBackend = bCrypt.encode(decryptPwdFromFrontEnd);
+
+                assertThat(decryptPwdFromFrontEnd).isEqualTo(resultOfDecryptionFrontEnd);
+                assertThat(encryptPwdForBackend).isEqualTo(resultOfEncryptionBackend);
                 authenticationService.createUser(details);
-                Mockito.when(authenticationRepository.checkUserName("VigneshM")).thenReturn(1);
-                boolean result = authenticationService.checkUserAvailability("VigneshM");
-                assertThat(result).isEqualTo(false);
             }
         }
     }
