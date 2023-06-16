@@ -12,11 +12,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationRepositoryTest {
+
     @MockBean
     private AuthenticationRepository authenticationRepository;
     UserDetails details;
@@ -26,47 +28,6 @@ public class AuthenticationRepositoryTest {
         details = new UserDetails(1,"Vicky7","vigneshmanikam2001@gmail.com","Vicky@17");
     }
 
-
-//    @Test
-//    public void toTestValidUserReturnsTrue() {
-//        String user = "admin";
-//        String password = "admin";
-//        int count = 1;
-//        String expectedQuery = "SELECT COUNT(*) FROM UserDetails WHERE username=:user AND password=:password";
-//
-//        when(entityManager.createQuery(expectedQuery)).thenReturn(query);
-//        when(query.setParameter("user", user)).thenReturn(query);
-//        when(query.setParameter("password", password)).thenReturn(query);
-//        when(query.getSingleResult()).thenReturn(count);
-//
-//        int result = authenticationRepository.validateUserName(user, password);
-//
-//        verify(entityManager).createQuery(expectedQuery);
-//        verify(query).setParameter("user", user);
-//        verify(query).setParameter("password", password);
-//        verify(query).getSingleResult();
-//        assertEquals(result,count);
-//    }
-//
-//    @Test
-//    public void toTestValidEmailReturnsTrue() {
-//        String email = "admin@gmail.com";
-//        String password = "admin";
-//        int count = 1;
-//        String expectedQuery = "SELECT COUNT(*) FROM UserDetails WHERE email=:user AND password=:password";
-//
-//        when(entityManager.createQuery(expectedQuery)).thenReturn(query);
-//        when(query.setParameter("user", email)).thenReturn(query);
-//        when(query.setParameter("password", password)).thenReturn(query);
-//        when(query.getSingleResult()).thenReturn(count);
-//
-//        int result = authenticationRepository.validateEmail(email, password);
-//        verify(entityManager).createQuery(expectedQuery);
-//        verify(query).setParameter("user", email);
-//        verify(query).setParameter("password", password);
-//        verify(query).getSingleResult();
-//        assertEquals(result,count);
-//    }
 
 
     @Test
@@ -108,4 +69,14 @@ public class AuthenticationRepositoryTest {
         int count = authenticationRepository.checkEmail(email);
         assertEquals(count,expectedCount);
     }
+
+    @Test
+    void shouldReturnHashedPasswordWhenAUserIsPassed(){
+        String user = "admin";
+        String expectedHashedPassword = "$2a$10$hM97P9pUgKrOCv0kBp7REuBWuduZ.5gZMkBz9uk/v.E2UAN1du1Yi";
+        when(authenticationRepository.validUserAsPassword(user)).thenReturn(expectedHashedPassword);
+        String actualPassword = authenticationRepository.validUserAsPassword(user);
+        assertEquals(expectedHashedPassword, actualPassword);
+    }
+
 }

@@ -14,10 +14,18 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationRepository authenticationRepository;
 
-    BCryptPasswordEncoder bCrypt =  new BCryptPasswordEncoder();
+    public String decrypt(String encryptedPassword) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encryptedPassword);
+        return new String(decodedBytes);
+    }
 
-    public Boolean userIsValid(String user,String password) {
-        return (authenticationRepository.validateUserName(user,password) == 1) || (authenticationRepository.validateEmail(user,password) == 1);
+    public Boolean userIsValid(String user, String password) {
+        String decryptPassword = decrypt(password);
+        String passwordFromDb = authenticationRepository.validUserAsPassword(user);
+        if(passwordFromDb == null){
+            return false;
+        }
+        return BCrypt.checkpw(decryptPassword,passwordFromDb);
     }
 
     public String decryptPassword(String password){
