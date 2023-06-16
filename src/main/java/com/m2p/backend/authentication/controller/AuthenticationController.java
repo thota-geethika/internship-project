@@ -21,7 +21,6 @@ public class AuthenticationController {
         System.out.println(password);
         return new ResponseEntity<>(authenticationService.userIsValid(user,password), HttpStatus.OK);
     }
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody UserDetails userDetails)
