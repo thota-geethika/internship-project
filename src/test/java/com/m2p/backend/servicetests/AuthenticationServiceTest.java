@@ -11,57 +11,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationServiceTest {
-
-//    @Nested
-//    class LoginService{
-//
-//        @InjectMocks
-//        private AuthenticationService authenticationService;
-//
-//        @Mock
-//        private AuthenticationRepository authenticationRepository;
-//
-//        @Test
-//        void toCheckTheUserNameIsValidOrNot(){
-//
-//            String userName = "naveenmr13";
-//
-//            String password = "Naveen@01";
-//
-//            Mockito.when(authenticationRepository.validateUserName(userName,password)).thenReturn(true);
-//
-//            Boolean validUser = authenticationService.userIsValid(userName,password);
-//
-//            assertThat(validUser).isEqualTo(true);
-//
-//            verify(authenticationRepository).validateUserName(userName,password);
-//
-//
-//        }
-//
-//        @Test
-//        void toCheckTheEmailIsValidOrNot(){
-//
-//            String email = "naveenmr13@gmail.com";
-//
-//            String password = "Naveen@01";
-//
-//            Mockito.when(authenticationRepository.validateEmail(email,password)).thenReturn(true);
-//
-//            Boolean validUser = authenticationService.userIsValid(email,password);
-//
-//            assertThat(validUser).isEqualTo(true);
-//
-//            verify(authenticationRepository).validateEmail(email,password);
-//
-//        }
 
         @Nested
         class RegisterService
@@ -69,8 +26,8 @@ public class AuthenticationServiceTest {
             @InjectMocks
             private AuthenticationService authenticationService;
 
-        @Mock
-        private AuthenticationRepository authenticationRepository;
+            @Mock
+            private AuthenticationRepository authenticationRepository;
             @Test
             void toCheckUserNameIsAvailable() {
                 Mockito.when(authenticationRepository.checkUserName("sruthi")).thenReturn(0);
@@ -111,5 +68,44 @@ public class AuthenticationServiceTest {
                 assertThat(result).isEqualTo(false);
             }
         }
+
+        @Nested
+        class LoginServiceTests{
+            @InjectMocks
+            private AuthenticationService authenticationService;
+
+            @Mock
+            private AuthenticationRepository authenticationRepository;
+
+            @Test
+            void itShouldReturnTrueWhenValidUserAndPasswordIsPassed(){
+
+                String user = "admin";
+
+                String encryptedPassword = "YWRtaW4NCg==";
+
+                String decryptedPassword = "admin";
+
+                String hashedPassword = BCrypt.hashpw(decryptedPassword, BCrypt.gensalt());
+
+                when(authenticationRepository.validUserAsPassword(user)).thenReturn(hashedPassword);
+
+                authenticationService.userIsValid(user, encryptedPassword);
+
+                assertTrue(BCrypt.checkpw(decryptedPassword,hashedPassword));
+            }
+
+            @Test
+            void itShouldReturnFalseWhenAnInvalidUserIsPassed(){
+                String user = "admin";
+                String encryptedPassword = "YWRtaW4NCg==";
+
+                when(authenticationRepository.validUserAsPassword(user)).thenReturn(null);
+
+                Boolean value = authenticationService.userIsValid(user, encryptedPassword);
+
+                assertFalse(value);
+            }
+        }
+
     }
-//}
