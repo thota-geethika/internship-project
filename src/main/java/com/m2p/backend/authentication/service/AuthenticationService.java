@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService {
 
+    long currentUserId = 2;
     @Autowired
     private AuthenticationRepository authenticationRepository;
 
@@ -16,6 +17,7 @@ public class AuthenticationService {
     }
 
     public void createUser(UserDetails userDetails) {
+        currentUserId = userDetails.getId();
         authenticationRepository.save(userDetails);
     }
 
@@ -25,5 +27,14 @@ public class AuthenticationService {
 
     public boolean checkEmailAvailability(String email) {
         return authenticationRepository.checkEmail(email) == 0;
+    }
+
+
+    public String giveUsername() {
+        return authenticationRepository.getUserName(currentUserId);
+    }
+
+    public String giveEmail() {
+        return authenticationRepository.getEmail(currentUserId);
     }
 }

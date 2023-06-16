@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
     @Autowired
@@ -26,6 +27,7 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody UserDetails userDetails)
     {
+        System.out.println("hey i came");
         authenticationService.createUser(userDetails);
     }
 
@@ -41,5 +43,17 @@ public class AuthenticationController {
     public boolean emailExistsOrNot(@RequestParam String email)
     {
         return authenticationService.checkEmailAvailability(email);
+    }
+
+    @GetMapping("/get-username")
+    public String giveUsername()
+    {
+        return authenticationService.giveUsername();
+    }
+
+    @GetMapping("/get-email")
+    public String giveEmail()
+    {
+        return authenticationService.giveEmail();
     }
 }

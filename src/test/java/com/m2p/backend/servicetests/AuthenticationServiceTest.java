@@ -111,5 +111,36 @@ public class AuthenticationServiceTest {
                 assertThat(result).isEqualTo(false);
             }
         }
+
+        @Nested
+        class ProfileDetails{
+
+            @InjectMocks
+            private AuthenticationService authenticationService;
+
+            @Mock
+            private AuthenticationRepository authenticationRepository;
+            @Test
+            void toCheckIfUsernameIsRetrievedForTheGivenId(){
+
+                UserDetails details = new UserDetails(1,"Geethika","geethika@gmail.com","geeths02");
+                authenticationService.createUser(details);
+                Mockito.when(authenticationRepository.getUserName(1L)).thenReturn("Geethika");
+                String userName = authenticationService.giveUsername();
+                assertThat(userName).isEqualTo("Geethika");
+
+            }
+
+            @Test
+            void toCheckIfEmailIsRetrievedForTheGivenId(){
+
+                UserDetails details = new UserDetails(1,"Geethika","geethika@gmail.com","geeths02");
+                authenticationService.createUser(details);
+                Mockito.when(authenticationRepository.getEmail(1)).thenReturn("geethika@gmail.com");
+                String userName = authenticationService.giveEmail();
+                assertThat(userName).isEqualTo("geethika@gmail.com");
+
+            }
+        }
     }
 //}

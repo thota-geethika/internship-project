@@ -1,21 +1,34 @@
 package com.m2p.backend.repositorytests;
 
+import com.m2p.backend.authentication.model.UserDetails;
 import com.m2p.backend.authentication.repository.AuthenticationRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @SpringJUnitConfig
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationRepositoryTest {
-    @Autowired
+    @MockBean
     private AuthenticationRepository authenticationRepository;
+
+    UserDetails details;
+    @BeforeEach
+    void setUp(){
+        details = new UserDetails(1,"Geethika","geethika@gmail.com","geeths02");
+    }
+
 //    @Test
 //    public void toTestValidUserReturnsTrue() {
 //        String user = "admin";
@@ -92,5 +105,25 @@ public class AuthenticationRepositoryTest {
         int expectedCount = 0;
         int count = authenticationRepository.checkEmail(email);
         assertEquals(count,expectedCount);
+    }
+
+
+    @Nested
+    class ProfileDetails{
+
+        @Test
+        void shouldReturnUsernameForTheGivenIdFromDatabase(){
+
+            Mockito.when(authenticationRepository.getUserName(1)).thenReturn(details.getUsername());
+            String userName = authenticationRepository.getUserName(1);
+            assertThat(userName).isEqualTo("Geethika");
+        }
+
+        @Test
+        void shouldReturnEmailForTheGivenIdFromDatabase(){
+            Mockito.when(authenticationRepository.getEmail(1)).thenReturn(details.getEmail());
+            String userName = authenticationRepository.getEmail(1);
+            assertThat(userName).isEqualTo("geethika@gmail.com");
+        }
     }
 }

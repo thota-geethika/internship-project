@@ -16,6 +16,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_credentials")
 public class UserDetails {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
