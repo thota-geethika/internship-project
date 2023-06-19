@@ -3,6 +3,7 @@ package com.m2p.backend.authentication.service;
 import com.m2p.backend.authentication.model.UserDetails;
 import com.m2p.backend.authentication.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class AuthenticationService {
     public Boolean userIsValid(String user, String password) {
         String decryptPassword = decrypt(password);
         String passwordFromDb = authenticationRepository.validUserAsPassword(user);
+
         if(passwordFromDb == null){
             return false;
         }
@@ -36,7 +38,7 @@ public class AuthenticationService {
 //    public String bcryptEncoder
 
     public void createUser(UserDetails userDetails) {
-//        BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
         String frontendEncryptedPassword = userDetails.getPassword();
         System.out.println(frontendEncryptedPassword);
