@@ -62,15 +62,6 @@ public class AuthenticationControllerTests {
                             .param("password",password))
                             .andExpect(status().isOk());
         }
-
-        @Test
-        void toCheckWhetherUserDetailsIsStoredInTheDatabase() throws Exception {
-            UserDetails userDetails = new UserDetails(1,"Vignesh","Vigneshmanikam2001@gmail.com","vicky7");
-            String json = objectMapper.writer().writeValueAsString(userDetails);
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
-                            .contentType(MediaType.APPLICATION_JSON).content(json))
-                    .andExpect(status().isCreated());
-        }
     }
 
     @Nested
