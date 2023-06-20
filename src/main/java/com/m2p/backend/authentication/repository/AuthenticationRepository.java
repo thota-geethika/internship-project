@@ -30,5 +30,8 @@ public interface AuthenticationRepository extends JpaRepository<UserDetails, Lon
 
     @Query("Select email from UserDetails where id=:id")
     public String getEmail(long id);
+
+    @Query("Select id from UserDetails where username=:name OR email=:name")
+    public long getCurrentId(String name);
 }
 

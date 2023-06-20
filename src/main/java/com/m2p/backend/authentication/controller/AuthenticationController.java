@@ -27,7 +27,6 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody UserDetails userDetails)
     {
-        System.out.println("hey i came");
         authenticationService.createUser(userDetails);
     }
 

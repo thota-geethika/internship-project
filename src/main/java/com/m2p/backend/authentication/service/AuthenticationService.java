@@ -12,7 +12,7 @@ import java.util.Base64;
 @Service
 public class AuthenticationService {
 
-    long currentUserId = 2;
+    long currentUserId;
     @Autowired
     private AuthenticationRepository authenticationRepository;
 
@@ -24,10 +24,11 @@ public class AuthenticationService {
     public Boolean userIsValid(String user, String password) {
         String decryptPassword = decrypt(password);
         String passwordFromDb = authenticationRepository.validUserAsPassword(user);
-
+        currentUserId = authenticationRepository.getCurrentId(user);
         if(passwordFromDb == null){
             return false;
         }
+
         return BCrypt.checkpw(decryptPassword,passwordFromDb);
     }
 
@@ -36,10 +37,9 @@ public class AuthenticationService {
         return new String(decodedBytes);
     }
 
-//    public String bcryptEncoder
+    public String bcryptEncoder;
 
     public void createUser(UserDetails userDetails) {
-        currentUserId = userDetails.getId();
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
         String frontendEncryptedPassword = userDetails.getPassword();
         System.out.println(frontendEncryptedPassword);
@@ -50,6 +50,7 @@ public class AuthenticationService {
         String encryptedPwd = bCrypt.encode(frontendDecryptedPassword);
         userDetails.setPassword(encryptedPwd);
         authenticationRepository.save(userDetails);
+        currentUserId = userDetails.getId();
     }
 
     public boolean checkUserAvailability(String name) {
@@ -62,6 +63,7 @@ public class AuthenticationService {
 
 
     public String giveUsername() {
+        System.out.println("currentUserId: "+currentUserId);
         return authenticationRepository.getUserName(currentUserId);
     }
 

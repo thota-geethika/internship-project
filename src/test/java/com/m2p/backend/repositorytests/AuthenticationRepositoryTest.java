@@ -3,6 +3,7 @@ package com.m2p.backend.repositorytests;
 import com.m2p.backend.authentication.model.UserDetails;
 import com.m2p.backend.authentication.repository.AuthenticationRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -70,5 +71,21 @@ public class AuthenticationRepositoryTest {
         Mockito.when(authenticationRepository.checkEmail(email)).thenReturn(0);
         int count = authenticationRepository.checkEmail(email);
         assertEquals(count,expectedCount);
+    }
+
+    @Nested
+    class ProfileDetails{
+        @Test
+        void shouldReturnUsernameForTheGivenIdFromDatabase(){
+            Mockito.when(authenticationRepository.getUserName(1)).thenReturn(details.getUsername());
+            String userName = authenticationRepository.getUserName(1);
+            assertThat(userName).isEqualTo("Vicky7");
+        }
+        @Test
+        void shouldReturnEmailForTheGivenIdFromDatabase(){
+            Mockito.when(authenticationRepository.getEmail(1)).thenReturn(details.getEmail());
+            String userName = authenticationRepository.getEmail(1);
+            assertThat(userName).isEqualTo("vigneshmanikam2001@gmail.com");
+        }
     }
 }
