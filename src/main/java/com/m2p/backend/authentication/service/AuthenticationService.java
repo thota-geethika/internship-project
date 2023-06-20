@@ -23,6 +23,7 @@ public class AuthenticationService {
     public Boolean userIsValid(String user, String password) {
         String decryptPassword = decrypt(password);
         String passwordFromDb = authenticationRepository.validUserAsPassword(user);
+
         if(passwordFromDb == null){
             return false;
         }
