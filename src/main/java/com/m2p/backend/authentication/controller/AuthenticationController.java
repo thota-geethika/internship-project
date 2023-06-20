@@ -15,14 +15,14 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @CrossOrigin("http://localhost:3000")
+    @CrossOrigin(origins = {"https://picfolio-m2p.netlify.app", "http://localhost:3000"})
     @GetMapping("/authenticate")
     @ResponseBody
     public ResponseEntity<Boolean> userIsValid(@RequestParam String user,@RequestParam  String password){
         return new ResponseEntity<>(authenticationService.userIsValid(user,password), HttpStatus.OK);
     }
 
-    @CrossOrigin("http://localhost:3000")
+    @CrossOrigin(origins = {"https://picfolio-m2p.netlify.app", "http://localhost:3000"})
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody UserDetails userDetails)
@@ -31,7 +31,7 @@ public class AuthenticationController {
         authenticationService.createUser(userDetails);
     }
 
-    @CrossOrigin("http://localhost:3000")
+    @CrossOrigin(origins = {"https://picfolio-m2p.netlify.app", "http://localhost:3000"})
     @GetMapping("/check-user")
     @ResponseStatus(HttpStatus.OK)
     public boolean userExistsOrNot(@RequestParam() String name)
@@ -39,7 +39,7 @@ public class AuthenticationController {
         return authenticationService.checkUserAvailability(name);
     }
 
-    @CrossOrigin("http://localhost:3000")
+    @CrossOrigin(origins = {"https://picfolio-m2p.netlify.app", "http://localhost:3000"})
     @GetMapping("/check-email")
     @ResponseStatus(HttpStatus.OK)
     public boolean emailExistsOrNot(@RequestParam String email)
