@@ -16,16 +16,22 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-
 public interface AuthenticationRepository extends JpaRepository<UserDetails, Long> {
-    @Query("SELECT COUNT(*) FROM UserDetails WHERE username=:user AND password=:password")
-    public int validateUserName(String user, String password);
-    @Query("SELECT COUNT(*) FROM UserDetails WHERE email=:user AND password=:password")
-    public int validateEmail(String user,String password);
+    @Query("SELECT password FROM UserDetails WHERE username=:User OR email=:User")
+    public String validUserAsPassword(String User);
+
     @Query("SELECT COUNT(*) FROM UserDetails WHERE username=:name")
     public int checkUserName(String name);
     @Query("SELECT COUNT(*) FROM UserDetails WHERE email=:email")
     public int checkEmail(String email);
 
+    @Query("Select username from UserDetails where id=:id")
+    public String getUserName(long id);
+
+    @Query("Select email from UserDetails where id=:id")
+    public String getEmail(long id);
+
+    @Query("Select id from UserDetails where username=:name OR email=:name")
+    public long getCurrentId(String name);
 }
 

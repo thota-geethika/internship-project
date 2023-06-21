@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @MockBean(AuthenticationService.class)
@@ -61,15 +62,6 @@ public class AuthenticationControllerTests {
                             .param("password",password))
                             .andExpect(status().isOk());
         }
-
-        @Test
-        void toCheckWhetherUserDetailsIsStoredInTheDatabase() throws Exception {
-            UserDetails userDetails = new UserDetails(1,"Vignesh","Vigneshmanikam2001@gmail.com","vicky7");
-            String json = objectMapper.writer().writeValueAsString(userDetails);
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
-                            .contentType(MediaType.APPLICATION_JSON).content(json))
-                    .andExpect(status().isCreated());
-        }
     }
 
     @Nested
@@ -102,6 +94,34 @@ public class AuthenticationControllerTests {
             mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
                             .contentType(MediaType.APPLICATION_JSON).content(json))
                     .andExpect(status().isCreated());
+        }
+    }
+
+    @Nested
+    class ProfileDetails{
+        @MockBean
+        private AuthenticationService authenticationService;
+
+        @Autowired
+        private MockMvc mockMvc;
+
+        @Autowired
+        private ObjectMapper objectMapper;
+
+        @Test
+        void checkIfUserNameIsGettingRetrieved() throws Exception{
+            Mockito.when(authenticationService.giveUsername()).thenReturn("Geethika");
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/get-username"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Geethika"));
+        }
+
+        @Test
+        void checkIfEmailIsGettingRetrieved() throws Exception{
+            Mockito.when(authenticationService.giveEmail()).thenReturn("something@gmail.com");
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/get-email"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("something@gmail.com"));
         }
     }
 }
